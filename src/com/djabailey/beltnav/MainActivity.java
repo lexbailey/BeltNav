@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity {
 	private LatLng SelectedLocation;
 	private Marker BusStop, myPos, myRot;
 	
-	// GloveThread is a class that handles communication with the glove. This is
+	// BeltThread is a class that handles communication with the Belt. This is
 	// a variable for our instance of it.
 	private BeltThread gt;
 	
@@ -88,7 +88,7 @@ public class MainActivity extends FragmentActivity {
         PebbleKit.sendDataToPebble(getApplicationContext(), UUID.fromString("0f08a738-2ee1-4506-a130-1122d0f632d5"), data);
 	}
 	
-	// This is our definition and instance of the interface for the glove
+	// This is our definition and instance of the interface for the Belt
 	// thread.
 	BeltThreadCallback cb = new BeltThreadCallback() {
 
@@ -262,7 +262,7 @@ public class MainActivity extends FragmentActivity {
 	// This is a function that will stop the current connection.
 	public void killConnection() {
 		try {
-			// Exit the glove thread loop.
+			// Exit the Belt thread loop.
 			gt.exitLoop();
 			// Close and deallocate the input and output streams.
 			inStream.close();
@@ -301,7 +301,7 @@ public class MainActivity extends FragmentActivity {
 			try {
 				// if there was a connection, the first thing to do is wait 500
 				// milliseconds. This is because the bluetooth module in the
-				// glove needs a little time to reinitialise itself after a
+				// Belt needs a little time to reinitialise itself after a
 				// disconnect. Half a second is far more than enough.
 				// Sleep for half a second.
 				Thread.sleep(500);
@@ -312,7 +312,7 @@ public class MainActivity extends FragmentActivity {
 			}
 
 			// Get the address of the last device to which we were connected.
-			// This is the MAC address, it should be unique to each glove
+			// This is the MAC address, it should be unique to each Belt
 			// (although it isn't guaranteed it's good-enough).
 			String address = state.getString("connectionAddress");
 
@@ -336,11 +336,11 @@ public class MainActivity extends FragmentActivity {
 					btSocket.connect();
 
 					try {
-						// Create the data streams so we can talk to the glove.
+						// Create the data streams so we can talk to the Belt.
 						outStream = btSocket.getOutputStream();
 						inStream = btSocket.getInputStream();
 
-						// create a GloveThread to handle comms.
+						// create a BeltThread to handle comms.
 						gt = new BeltThread();
 						gt.init(inStream, cb);
 						gt.start();
@@ -384,7 +384,7 @@ public class MainActivity extends FragmentActivity {
 					try {
 						btSocket.close();
 						// This is where failure occurs under normal
-						// circumstances where the glove is switched off
+						// circumstances where the Belt is switched off
 						// (unreachable)
 						// no error messages produced here as this is a normal
 						// place to end up.
@@ -426,12 +426,12 @@ public class MainActivity extends FragmentActivity {
 			// Variable to state if iteration is done.
 			boolean doneItter = false;
 
-			// If there is still a GloveThread, kill it.
+			// If there is still a BeltThread, kill it.
 			if (gt != null) {
 				killConnection();
 			}
 
-			// Connect to the glove (VIA Bluetooth)
+			// Connect to the Belt (VIA Bluetooth)
 			mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 			// If no bluetooth is available, forget the whole thing the device
@@ -467,12 +467,11 @@ public class MainActivity extends FragmentActivity {
 				BluetoothDevice btd = itr.next();
 
 				// Check to see if it has the correct name, if it does, it is a
-				// multimeter glove, if not then ignore it as it's just another
+				// wayfinder Belt, if not then ignore it as it's just another
 				// bluetooth device.
-				if ((btd.getName().toLowerCase().equals("linvor"))
-						|| (btd.getName().toLowerCase().equals("multiglove"))) {
+				if (btd.getName().toLowerCase().equals("linvor")) {
 
-					// Put the glove device into the device variable
+					// Put the Belt device into the device variable
 					device = btd;
 
 					// Mostly same as before...
@@ -495,7 +494,7 @@ public class MainActivity extends FragmentActivity {
 								try {
 									outStream.write(msgBuffer);
 
-									// We can now stop iterating as the glove
+									// We can now stop iterating as the Belt
 									// is connected.
 									doneItter = true;
 									connected = true;
@@ -544,7 +543,7 @@ public class MainActivity extends FragmentActivity {
 
 			if (device == null) {
 				Toast.makeText(getBaseContext(),
-						"No paired device with name 'linvor' or 'multiglove'.",
+						"No paired device with name 'linvor'.",
 						Toast.LENGTH_LONG).show();
 			} else {
 				if (gt != null) {
