@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">BeltNav</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_satellite">Satellite</string>
+    <string name="title_activity_main">BeltNav</string>
+    <string name="menu_map">Map</string>
+
+</resources>
