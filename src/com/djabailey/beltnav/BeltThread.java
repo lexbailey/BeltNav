@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 import com.google.android.gms.maps.model.LatLng;
 
-//This is the GloveThread class, it handles communications with the glove. It receives and interprets what the glove sends although it doesn't send anything to the glove. Writing is instead done on the main thread to make synchronisation easier, this class makes requests to the main thread to send stuff.
+//This is the BeltThread class, it handles communications with the belt. It receives and interprets what the belt sends although it doesn't send anything to the belt. Writing is instead done on the main thread to make synchronisation easier, this class makes requests to the main thread to send stuff.
 //The class derives from thread, this is because it needs to be able to run continuously and constantly check for incoming data.
 public class BeltThread extends Thread {
 
@@ -34,7 +34,7 @@ public class BeltThread extends Thread {
 	private BeltThreadCallback gtcb;
 
 	// This is the main function loop. It is called repeatedly by
-	// GloveThread.run()
+	// BeltThread.run()
 	private void loopFunc() {
 		try {
 			// The function only does useful things when there is data available
@@ -163,13 +163,13 @@ public class BeltThread extends Thread {
 
 	public void init(InputStream is, BeltThreadCallback cb) {
 		// this function initialises the callback and input stream, allowing the
-		// glove to talk to this thread and this thread to talk to the main
+		// belt to talk to this thread and this thread to talk to the main
 		// thread.
 
 		// keep a copy of the InputStream.
 		mis = is;
 
-		// Keep a copy of the GloveThreadCallback.
+		// Keep a copy of the BeltThreadCallback.
 		gtcb = cb;
 	}
 
